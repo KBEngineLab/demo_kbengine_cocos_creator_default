@@ -1,0 +1,410 @@
+{
+  "ver": "2.3.13",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497",
+  "files": [
+    "__original-animation-0.cconb",
+    "__original-animation-1.cconb",
+    "__original-animation-2.cconb",
+    "__original-animation-3.cconb",
+    "__original-animation-4.cconb"
+  ],
+  "subMetas": {
+    "0b568": {
+      "importer": "gltf-mesh",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@0b568",
+      "displayName": "",
+      "id": "0b568",
+      "name": "Cylinder.001.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 1810
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "83e29": {
+      "importer": "gltf-animation",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@83e29",
+      "displayName": "",
+      "id": "83e29",
+      "name": "attack.animation",
+      "userData": {
+        "gltfIndex": 0,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.9333333373069763
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "70f59": {
+      "importer": "gltf-animation",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@70f59",
+      "displayName": "",
+      "id": "70f59",
+      "name": "die.animation",
+      "userData": {
+        "gltfIndex": 1,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.36666667461395264
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "82a48": {
+      "importer": "gltf-animation",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@82a48",
+      "displayName": "",
+      "id": "82a48",
+      "name": "idle.animation",
+      "userData": {
+        "gltfIndex": 2,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 2.6666667461395264
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "37ee5": {
+      "importer": "gltf-animation",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@37ee5",
+      "displayName": "",
+      "id": "37ee5",
+      "name": "run.animation",
+      "userData": {
+        "gltfIndex": 3,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "a9046": {
+      "importer": "gltf-animation",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@a9046",
+      "displayName": "",
+      "id": "a9046",
+      "name": "relive.animation",
+      "userData": {
+        "gltfIndex": 4,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 2.9000000953674316
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "438fe": {
+      "importer": "gltf-skeleton",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@438fe",
+      "displayName": "",
+      "id": "438fe",
+      "name": "UnnamedSkeleton.skeleton",
+      "userData": {
+        "gltfIndex": 0,
+        "jointsLength": 12
+      },
+      "ver": "1.0.1",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "75f0e": {
+      "importer": "gltf-material",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@75f0e",
+      "displayName": "",
+      "id": "75f0e",
+      "name": "Skeleton.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "befb4": {
+      "importer": "gltf-scene",
+      "uuid": "8bcb7258-c60e-47d0-a909-b43319e42497@befb4",
+      "displayName": "",
+      "id": "befb4",
+      "name": "Skeleton.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "fbx": {
+      "smartMaterialEnabled": true,
+      "matchMeshNames": false
+    },
+    "animationImportSettings": [
+      {
+        "name": "SkeletonArmature|Skeleton_Attack",
+        "duration": 0.9333333373069763,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "attack",
+            "from": 0,
+            "to": 0.9333333373069763,
+            "wrapMode": 2,
+            "previousId": "83e29"
+          }
+        ]
+      },
+      {
+        "name": "SkeletonArmature|Skeleton_Death",
+        "duration": 0.36666667461395264,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "die",
+            "from": 0,
+            "to": 0.36666667461395264,
+            "wrapMode": 2,
+            "previousId": "70f59"
+          }
+        ]
+      },
+      {
+        "name": "SkeletonArmature|Skeleton_Idle",
+        "duration": 2.6666667461395264,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "idle",
+            "from": 0,
+            "to": 2.6666667461395264,
+            "wrapMode": 2,
+            "previousId": "82a48"
+          }
+        ]
+      },
+      {
+        "name": "SkeletonArmature|Skeleton_Running",
+        "duration": 1,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "run",
+            "from": 0,
+            "to": 1,
+            "wrapMode": 2,
+            "previousId": "37ee5"
+          }
+        ]
+      },
+      {
+        "name": "SkeletonArmature|Skeleton_Spawn",
+        "duration": 2.9000000953674316,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "relive",
+            "from": 0,
+            "to": 2.9000000953674316,
+            "wrapMode": 2,
+            "previousId": "a9046"
+          }
+        ]
+      }
+    ],
+    "assetFinder": {
+      "meshes": [
+        "8bcb7258-c60e-47d0-a909-b43319e42497@0b568"
+      ],
+      "skeletons": [
+        "8bcb7258-c60e-47d0-a909-b43319e42497@438fe"
+      ],
+      "textures": [],
+      "materials": [
+        "8bcb7258-c60e-47d0-a909-b43319e42497@75f0e"
+      ],
+      "scenes": [
+        "8bcb7258-c60e-47d0-a909-b43319e42497@befb4"
+      ]
+    },
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "materials": {
+      "8bcb7258-c60e-47d0-a909-b43319e42497@75f0e": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "__editorExtras__": {},
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "mainColor": {
+              "__type__": "cc.Color",
+              "r": 204,
+              "g": 184,
+              "b": 153,
+              "a": 255
+            },
+            "emissive": {
+              "__type__": "cc.Color",
+              "r": 82,
+              "g": 71,
+              "b": 53,
+              "a": 255
+            }
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      }
+    }
+  }
+}

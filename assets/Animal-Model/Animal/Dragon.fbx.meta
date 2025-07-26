@@ -1,0 +1,794 @@
+{
+  "ver": "2.3.13",
+  "importer": "fbx",
+  "imported": true,
+  "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4",
+  "files": [
+    "__original-animation-0.cconb",
+    "__original-animation-1.cconb",
+    "__original-animation-2.cconb",
+    "__original-animation-3.cconb",
+    "__original-animation-4.cconb"
+  ],
+  "subMetas": {
+    "51706": {
+      "importer": "gltf-scene",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@51706",
+      "displayName": "",
+      "id": "51706",
+      "name": "Dragon.prefab",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "72425": {
+      "importer": "gltf-animation",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@72425",
+      "displayName": "",
+      "id": "72425",
+      "name": "DragonArmature|Dragon_Flying.animation",
+      "userData": {
+        "gltfIndex": 3,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1.6666666269302368
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "dc2b7": {
+      "importer": "gltf-mesh",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@dc2b7",
+      "displayName": "",
+      "id": "dc2b7",
+      "name": "Eyes_Material0.mesh",
+      "userData": {
+        "gltfIndex": 0,
+        "triangleCount": 240
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "19a4c": {
+      "importer": "gltf-mesh",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@19a4c",
+      "displayName": "",
+      "id": "19a4c",
+      "name": "Dragon_Material0.mesh",
+      "userData": {
+        "gltfIndex": 1,
+        "triangleCount": 1104
+      },
+      "ver": "1.1.1",
+      "imported": true,
+      "files": [
+        ".bin",
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "8fa42": {
+      "importer": "gltf-animation",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@8fa42",
+      "displayName": "",
+      "id": "8fa42",
+      "name": "DragonArmature|Dragon_Attack.animation",
+      "userData": {
+        "gltfIndex": 0,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 0.875
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "ff06f": {
+      "importer": "gltf-animation",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@ff06f",
+      "displayName": "",
+      "id": "ff06f",
+      "name": "DragonArmature|Dragon_Attack2.animation",
+      "userData": {
+        "gltfIndex": 1,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1.6666666269302368
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "8be75": {
+      "importer": "gltf-animation",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@8be75",
+      "displayName": "",
+      "id": "8be75",
+      "name": "DragonArmature|Dragon_Death.animation",
+      "userData": {
+        "gltfIndex": 2,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1.2083333730697632
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "26b6c": {
+      "importer": "gltf-animation",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@26b6c",
+      "displayName": "",
+      "id": "26b6c",
+      "name": "DragonArmature|Dragon_Hit.animation",
+      "userData": {
+        "gltfIndex": 4,
+        "wrapMode": 2,
+        "sample": 30,
+        "span": {
+          "from": 0,
+          "to": 1.6666666269302368
+        },
+        "events": []
+      },
+      "ver": "1.0.17",
+      "imported": true,
+      "files": [
+        ".cconb"
+      ],
+      "subMetas": {}
+    },
+    "438fe": {
+      "importer": "gltf-skeleton",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@438fe",
+      "displayName": "",
+      "id": "438fe",
+      "name": "UnnamedSkeleton.skeleton",
+      "userData": {
+        "gltfIndex": 0,
+        "jointsLength": 27
+      },
+      "ver": "1.0.1",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "925cb": {
+      "importer": "gltf-material",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@925cb",
+      "displayName": "",
+      "id": "925cb",
+      "name": "Main.material",
+      "userData": {
+        "gltfIndex": 0
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "f4b54": {
+      "importer": "gltf-material",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@f4b54",
+      "displayName": "",
+      "id": "f4b54",
+      "name": "Eyes.material",
+      "userData": {
+        "gltfIndex": 1
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "5a1dd": {
+      "importer": "gltf-material",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@5a1dd",
+      "displayName": "",
+      "id": "5a1dd",
+      "name": "Wings.material",
+      "userData": {
+        "gltfIndex": 2
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "a85a7": {
+      "importer": "gltf-material",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@a85a7",
+      "displayName": "",
+      "id": "a85a7",
+      "name": "Belly.material",
+      "userData": {
+        "gltfIndex": 3
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    },
+    "619a8": {
+      "importer": "gltf-material",
+      "uuid": "625c8144-49db-4e95-8ae4-174e6c1f7ba4@619a8",
+      "displayName": "",
+      "id": "619a8",
+      "name": "Claws.material",
+      "userData": {
+        "gltfIndex": 4
+      },
+      "ver": "1.0.14",
+      "imported": true,
+      "files": [
+        ".json"
+      ],
+      "subMetas": {}
+    }
+  },
+  "userData": {
+    "imageMetas": [],
+    "fbx": {
+      "smartMaterialEnabled": true,
+      "matchMeshNames": false
+    },
+    "animationImportSettings": [
+      {
+        "name": "DragonArmature|Dragon_Attack",
+        "duration": 0.875,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "DragonArmature|Dragon_Attack",
+            "from": 0,
+            "to": 0.875,
+            "wrapMode": 2,
+            "previousId": "8fa42"
+          }
+        ]
+      },
+      {
+        "name": "DragonArmature|Dragon_Attack2",
+        "duration": 1.6666666269302368,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "DragonArmature|Dragon_Attack2",
+            "from": 0,
+            "to": 1.6666666269302368,
+            "wrapMode": 2,
+            "previousId": "ff06f"
+          }
+        ]
+      },
+      {
+        "name": "DragonArmature|Dragon_Death",
+        "duration": 1.2083333730697632,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "DragonArmature|Dragon_Death",
+            "from": 0,
+            "to": 1.2083333730697632,
+            "wrapMode": 2,
+            "previousId": "8be75"
+          }
+        ]
+      },
+      {
+        "name": "DragonArmature|Dragon_Flying",
+        "duration": 1.6666666269302368,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "DragonArmature|Dragon_Flying",
+            "from": 0,
+            "to": 1.6666666269302368,
+            "wrapMode": 2,
+            "previousId": "72425"
+          }
+        ]
+      },
+      {
+        "name": "DragonArmature|Dragon_Hit",
+        "duration": 1.6666666269302368,
+        "fps": 30,
+        "splits": [
+          {
+            "name": "DragonArmature|Dragon_Hit",
+            "from": 0,
+            "to": 1.6666666269302368,
+            "wrapMode": 2,
+            "previousId": "26b6c"
+          }
+        ]
+      }
+    ],
+    "assetFinder": {
+      "meshes": [
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@dc2b7",
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@19a4c"
+      ],
+      "skeletons": [
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@438fe"
+      ],
+      "textures": [],
+      "materials": [
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@925cb",
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@f4b54",
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@5a1dd",
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@a85a7",
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@619a8"
+      ],
+      "scenes": [
+        "625c8144-49db-4e95-8ae4-174e6c1f7ba4@51706"
+      ]
+    },
+    "lods": {
+      "enable": false,
+      "hasBuiltinLOD": false,
+      "options": [
+        {
+          "screenRatio": 0.25,
+          "faceCount": 1
+        },
+        {
+          "screenRatio": 0.125,
+          "faceCount": 0.25
+        },
+        {
+          "screenRatio": 0.01,
+          "faceCount": 0.1
+        }
+      ]
+    },
+    "materials": {
+      "625c8144-49db-4e95-8ae4-174e6c1f7ba4@925cb": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "__editorExtras__": {},
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "mainColor": {
+              "__type__": "cc.Color",
+              "r": 63,
+              "g": 28,
+              "b": 32,
+              "a": 255
+            },
+            "emissive": {
+              "__type__": "cc.Color",
+              "r": 32,
+              "g": 12,
+              "b": 15,
+              "a": 255
+            }
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "625c8144-49db-4e95-8ae4-174e6c1f7ba4@5a1dd": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "__editorExtras__": {},
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "mainColor": {
+              "__type__": "cc.Color",
+              "r": 31,
+              "g": 31,
+              "b": 31,
+              "a": 255
+            },
+            "emissive": {
+              "__type__": "cc.Color",
+              "r": 17,
+              "g": 17,
+              "b": 17,
+              "a": 255
+            }
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "625c8144-49db-4e95-8ae4-174e6c1f7ba4@a85a7": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "__editorExtras__": {},
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "mainColor": {
+              "__type__": "cc.Color",
+              "r": 155,
+              "g": 131,
+              "b": 42,
+              "a": 255
+            },
+            "emissive": {
+              "__type__": "cc.Color",
+              "r": 92,
+              "g": 78,
+              "b": 24,
+              "a": 255
+            }
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      },
+      "625c8144-49db-4e95-8ae4-174e6c1f7ba4@619a8": {
+        "__type__": "cc.Material",
+        "_name": "",
+        "_objFlags": 0,
+        "__editorExtras__": {},
+        "_native": "",
+        "_effectAsset": {
+          "__uuid__": "c8f66d17-351a-48da-a12c-0212d28575c4",
+          "__expectedType__": "cc.EffectAsset"
+        },
+        "_techIdx": 0,
+        "_defines": [
+          {},
+          {},
+          {},
+          {},
+          {},
+          {}
+        ],
+        "_states": [
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          },
+          {
+            "rasterizerState": {},
+            "depthStencilState": {},
+            "blendState": {
+              "targets": [
+                {}
+              ]
+            }
+          }
+        ],
+        "_props": [
+          {
+            "mainColor": {
+              "__type__": "cc.Color",
+              "r": 24,
+              "g": 24,
+              "b": 24,
+              "a": 255
+            },
+            "emissive": {
+              "__type__": "cc.Color",
+              "r": 7,
+              "g": 7,
+              "b": 7,
+              "a": 255
+            }
+          },
+          {},
+          {},
+          {},
+          {},
+          {}
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+{
+  /* Base configuration. Do not edit this field. */
+  "extends": "./temp/tsconfig.cocos.json",
+
+  /* Add your custom configuration here. */
+  "compilerOptions": {
+    "strict": false,
+    "target": "ES2020",           // 至少要 ES2020 才支持 bigint
+    "lib": ["ES2020", "DOM"],     // 必须包含 ES2020 或以上
+  }
+}

@@ -1,0 +1,140 @@
+//    Copyright (C) 2016-2018 __COMPANY_NAME
+//    All rights reserved
+//
+//    created by zone at 2018-10-19 19:00
+
+import KBEDebug from "../kbe_typescript_plugins/KBEDebug";
+import { RegisterScript } from "../kbe_typescript_plugins/ExportEntity";
+import { Vector3 } from "../kbe_typescript_plugins/KBEMath";
+
+
+import { _decorator, CharacterController, director, find, instantiate, Prefab, resources, SkeletalAnimation, tween, v3, Vec3 } from 'cc';
+import { AvatarBase } from "../kbe_typescript_plugins/AvatarBase";
+import { GameObject } from "../GameObject";
+import { g_CameraController } from "../CameraController";
+import { PlayerController } from "../PlayerController";
+
+export var g_Avatar
+export class Avatar extends AvatarBase {
+    public onAddSkill(arg1: number) {
+        console.log("Avatar::onAddSkill: " + arg1);
+    }
+    public onJump() {
+        console.log("Avatar::onJump");
+    }
+    public onRemoveSkill(arg1: number) {
+        console.log("Avatar::onRemoveSkill: " + arg1);
+    }
+    public dialog_addOption(arg1: number, arg2: number, arg3: string, arg4: number) {
+        console.log("Avatar::dialog_addOption: " + arg1 + ", " + arg2 + ", " + arg3 + ", " + arg4);
+    }
+    public dialog_close() {
+        console.log("Avatar::dialog_close");
+    }
+    public dialog_setText(arg1: string, arg2: number, arg3: number, arg4: string) {
+        console.log("Avatar::dialog_setText: " + arg1 + ", " + arg2 + ", " + arg3 + ", " + arg4);
+    }
+    public recvDamage(arg1: number, arg2: number, arg3: number, arg4: number) {
+        console.log("Avatar::recvDamage: " + arg1 + ", " + arg2 + ", " + arg3 + ", " + arg4);
+    }
+    __init__() {
+        super.__init__()
+        if (this.IsPlayer()) {
+            g_Avatar = this
+            window["g_Avatar"] = this
+            // g_HelloLayer.node.active=false
+            // g_WorldUILayer.node.active=true
+            // scene.loadScene("world")
+
+        }
+    }
+
+    onPositionChanged(oldVal: Vector3): void {
+        if (!this.renderObj) return;
+        if (this.IsPlayer()) return;
+
+        const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
+
+        // 停止之前的移动 tween（如果有）
+        tween(this.renderObj).stop();
+
+        // 平滑移动（0.2 秒可调）
+        tween(this.renderObj)
+            .to(0.2, { position: targetPos }, { easing: 'linear' })
+            .start();
+    }
+
+    onDirectionChanged(oldVal: Vector3): void {
+        if (this.IsPlayer()) return;
+        // console.log("Monster::onDirectionChanged:", this.direction);
+        // console.log("Old direction:", oldVal);
+        super.onDirectionChanged(oldVal);
+
+        if (this.renderObj) {
+            this.renderObj.setRotationFromEuler(this.direction.x, this.direction.z, this.direction.y);
+        }
+    }
+
+    public onHPChanged(oldValue: number): void {
+        if (this.renderObj) {
+            this.renderObj.getComponent(GameObject).setHP(this.HP, this.HP_Max);
+        }
+    }
+    OnEnterWorld(): void {
+        super.OnEnterWorld()
+        let that = this;
+
+        resources.load("prefab/Player", Prefab, (err, prefab) => {
+            if (err) {
+                console.error("加载 Player prefab 失败:", err);
+                return;
+            }
+
+            let player = instantiate(prefab);
+
+
+            player.name = `Player_${this.id}`;
+
+            player.setPosition(this.position.x, 0, this.position.z);
+            player.setRotationFromEuler(this.direction.x, this.direction.z, this.direction.y);
+
+
+            director.getScene().addChild(player);
+
+
+            let go = player.addComponent(GameObject);
+            go.username = that.name;
+            go.hp = that.HP;
+            go.hpMax = that.HP_Max;
+            go.offset = v3(0, 6);
+            go.create();
+
+            console.log(this.position)
+
+
+            if (this.IsPlayer()) {
+                g_CameraController.target = player;
+
+                let pc = player.addComponent(PlayerController)
+                pc.animation = player.getComponent(SkeletalAnimation)
+                pc.characterController = player.getComponent(CharacterController)
+                pc.moveSpeed = this.moveSpeed
+                pc.avatar = that;
+            }
+
+            that.renderObj = player;
+        });
+    }
+
+
+    OnLeaveWorld(): void {
+        super.OnLeaveWorld();
+        if (this.renderObj) {
+            this.renderObj.destroy();
+            this.renderObj = null;
+        }
+    }
+
+}
+
+RegisterScript("Avatar", Avatar);
