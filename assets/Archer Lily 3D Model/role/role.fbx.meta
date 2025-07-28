@@ -57,7 +57,7 @@
       "name": "attack.animation",
       "userData": {
         "gltfIndex": 0,
-        "wrapMode": 2,
+        "wrapMode": 0,
         "sample": 30,
         "span": {
           "from": 2.3333333333333335,
@@ -87,7 +87,7 @@
       "name": "die.animation",
       "userData": {
         "gltfIndex": 0,
-        "wrapMode": 2,
+        "wrapMode": 1,
         "sample": 30,
         "span": {
           "from": 4.666666666666667,
@@ -229,14 +229,14 @@
             "name": "attack",
             "from": 2.3333333333333335,
             "to": 3.6666666666666665,
-            "wrapMode": 2,
+            "wrapMode": 0,
             "previousId": "989ed"
           },
           {
             "name": "die",
             "from": 4.666666666666667,
             "to": 6.166666666666667,
-            "wrapMode": 2,
+            "wrapMode": 1,
             "previousId": "b4251"
           },
           {

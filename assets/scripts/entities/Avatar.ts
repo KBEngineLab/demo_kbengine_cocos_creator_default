@@ -8,7 +8,7 @@ import { RegisterScript } from "../kbe_typescript_plugins/ExportEntity";
 import { Vector3 } from "../kbe_typescript_plugins/KBEMath";
 
 
-import { _decorator, CharacterController, director, find, instantiate, Prefab, resources, SkeletalAnimation, tween, v3, Vec3 } from 'cc';
+import { _decorator, CharacterController, director, find, instantiate, Prefab, resources, SkeletalAnimation, tween, v3, Vec3 ,Node} from 'cc';
 import { AvatarBase } from "../kbe_typescript_plugins/AvatarBase";
 import { GameObject } from "../GameObject";
 import { g_CameraController } from "../CameraController";
@@ -48,6 +48,10 @@ export class Avatar extends AvatarBase {
         console.log("Avatar::dialog_setText: " + arg1 + ", " + arg2 + ", " + arg3 + ", " + arg4);
     }
     public recvDamage(arg1: number, arg2: number, arg3: number, arg4: number) {
+        // 获取攻击方node
+        let node = KBEngineApp.app.entities[arg1].renderObj as Node
+        node.getComponent(GameObject)?.playAttack()
+
         console.log("Avatar::recvDamage: " + arg1 + ", " + arg2 + ", " + arg3 + ", " + arg4);
     }
     __init__() {
@@ -61,6 +65,13 @@ export class Avatar extends AvatarBase {
 
         }
     }
+
+
+    public onStateChanged(oldValue: number): void {
+        // = 1 死亡
+        // this.cellEntityCall.useTargetSkill
+    }
+
 
     onPositionChanged(oldVal: Vector3): void {
         super.onPositionChanged(oldVal);

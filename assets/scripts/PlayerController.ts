@@ -1,18 +1,31 @@
 import {
     _decorator, Component, Input, input, EventKeyboard,
     KeyCode, Vec3, CharacterController, Animation, Quat, Node,
-    find
+    find,
+    Prefab,
+    resources,
+    instantiate,
+    Camera,
+    EventTouch,
+    PhysicsSystem
 } from 'cc';
 import { g_CameraController } from './CameraController';
 import { Avatar } from './entities/Avatar';
 import { Vector3 } from './kbe_typescript_plugins/KBEMath';
 import { KBEngineApp } from './kbe_typescript_plugins/KBEngine';
+import { MessagePopup } from './MessagePopup';
 const { ccclass, property } = _decorator;
 
+enum AnimState {
+    Idle = 'idle',
+    Run = 'run',
+    Attack = 'attack',
+    Die = 'die',  // 新增死亡动画状态
+}
 @ccclass('PlayerController')
 export class PlayerController extends Component {
 
-    avatar:Avatar = null!;
+    avatar: Avatar = null!;
 
     @property
     moveSpeed: number = 5;
@@ -29,10 +42,10 @@ export class PlayerController extends Component {
     @property(Animation)
     animation: Animation = null!;
 
-    
+
     @property(Node)
-    cameraNode: Node= null!;  // 相机节点引用
-    camera: Node= null!;  // 相机节点引用
+    cameraNode: Node = null!;  // 相机节点引用
+    camera: Node = null!;  // 相机节点引用
 
 
     private _velocityY: number = 0;
@@ -41,12 +54,109 @@ export class PlayerController extends Component {
     private _worldMove: Vec3 = new Vec3();
     private _rotation: Quat = new Quat();
 
+    private _reliveBtn: Node = null!; // 复活按钮
+    private _canvas: Node = null!; // 复活按钮
+
     private _keyMap: Record<number, boolean> = {};
+
+    private _playDieAnim: boolean = false;
+    
+    private _currentState: AnimState = AnimState.Idle;
+    private _attackTimer: number = 0;
 
     start() {
         // this.cameraNode = find("CameraNode")
         input.on(Input.EventType.KEY_DOWN, this.onKeyDown, this);
         input.on(Input.EventType.KEY_UP, this.onKeyUp, this);
+
+
+        input.on(Input.EventType.TOUCH_END, this.onTouchEnd, this);
+        this.createReliveBtn();
+    }
+
+    onTouchEnd(event: EventTouch) {
+        const screenPos = event.getLocation(); // 获取屏幕点击坐标
+
+        // 从屏幕点转换到射线
+        const camera = g_CameraController.cameraNode.getComponent(Camera)!;
+        const ray = camera.screenPointToRay(screenPos.x, screenPos.y);
+
+        if (PhysicsSystem.instance.raycast(ray)) {
+
+            for  (const result of PhysicsSystem.instance.raycastResults) {
+                // const result = PhysicsSystem.instance.raycastResults[0];
+
+                const hitNode = result.collider?.node;
+                if (!hitNode) return;
+
+                if(!hitNode.name.startsWith("Monster")) continue;
+
+                // if(hitNode.)
+
+                // 计算距离
+                const playerPos = this.node.worldPosition;
+                const targetPos = hitNode.worldPosition;
+                const dist = Vec3.distance(playerPos, targetPos);
+
+
+                if (dist < 20) {
+
+
+                    this.playAttack()
+
+                    // 你可以添加其它逻辑，如发送攻击事件、扣血等
+                    console.log(hitNode.name.substring(hitNode.name.indexOf("_")));
+                    this.avatar.cellEntityCall.useTargetSkill(1,Number(hitNode.name.substring(hitNode.name.indexOf("_")+ 1)))
+                } else {
+                    
+                    MessagePopup.showMessage("目标距离太远，无法攻击")
+                }
+            }
+            
+        }
+    }
+
+
+
+    createReliveBtn() {
+        if (this._canvas == null) {
+            this._canvas = find("Canvas");
+        }
+        if (this._canvas == null) {
+            console.error("Canvas not found!");
+            return;
+        }
+
+        if (find("Canvas/复活") != null) {
+            this._reliveBtn = find("Canvas/复活");
+        }
+
+        if (this._reliveBtn != null) {
+            return; // 如果复活按钮已经存在，则不再创建
+        }
+        resources.load("prefab/ui/复活", Prefab, (err, prefab) => {
+
+
+            if (err) {
+                console.error("加载 复活 prefab 失败:", err);
+                return;
+            }
+
+            let reliveBtn = instantiate(prefab);
+            reliveBtn.active = false;
+            reliveBtn.parent = this._canvas;
+
+            this._reliveBtn = reliveBtn;
+
+            this._reliveBtn.on(Node.EventType.TOUCH_END, () => {
+                if (this.avatar && this.avatar.state == 1) { // 玩家死亡状态
+                    // this.avatar.relive(); // 调用复活方法
+                    this.avatar.cellEntityCall.relive(1); // 调用复活方法
+                    // this._reliveBtn.active = false; // 隐藏复活按钮
+                }
+            }, this);
+
+        });
     }
 
     onDestroy() {
@@ -62,7 +172,58 @@ export class PlayerController extends Component {
         this._keyMap[event.keyCode] = false;
     }
 
+    public playAttack() {
+        if (this._currentState === AnimState.Attack) return;
+
+        this._switchAnim(AnimState.Attack);
+        this._attackTimer = 1.33; // 攻击动画时长（单位：秒，根据实际动画时长调整）
+    }
+
+    private _switchAnim(state: AnimState) {
+        if (this._currentState === state || !this.animation) return;
+
+        this._currentState = state;
+
+        // if(state.)
+        if (!this.animation.getState(state)?.isPlaying) {
+            this.animation.play(state);
+        }
+    }
+
+
     update(deltaTime: number) {
+        if (this._attackTimer > 0) {
+            this._attackTimer -= deltaTime;
+            if (this._attackTimer <= 0) {
+                this._attackTimer = 0;
+                this._switchAnim(AnimState.Idle);
+            }
+            return;
+        }
+
+
+        if (this.avatar == null) {
+            return;
+        }
+
+        // 玩家死亡状态
+        if (this._reliveBtn != null) {
+            if (this.avatar.state == 1) {
+                this._reliveBtn.active = true; // 显示复活按钮
+                if (!this._playDieAnim && !this.animation.getState('die')?.isPlaying) {
+                    this._playDieAnim = true;
+                    this.animation.play('die');
+                }
+            } else {
+                this._playDieAnim = false;
+                this._reliveBtn.active = false; // 隐藏复活按钮
+            }
+        }
+
+
+        if (this.avatar.state == 1) return;
+
+
         // if(this.camera == null){
         //     this.camera = this.cameraNode.getChildByName("FollowCamera")
         //     return
@@ -86,7 +247,7 @@ export class PlayerController extends Component {
             forward.y = 0;
             forward.normalize();
 
-            
+
 
             // 获取相机 right 方向
             const right = new Vec3();
@@ -141,17 +302,24 @@ export class PlayerController extends Component {
         if (this.animation) {
 
 
-            if (isMoving && !this.animation.getState('run')?.isPlaying) {
-                this.animation.play('run');
-            } else if (!isMoving && !this.animation.getState('idle')?.isPlaying) {
-                this.animation.play('idle');
+            if(isMoving){
+                this._switchAnim(AnimState.Run)
+            }else{
+
+                this._switchAnim(AnimState.Idle)
             }
+
+            // if (isMoving && !this.animation.getState('run')?.isPlaying) {
+            //     this.animation.play('run');
+            // } else if (!isMoving && !this.animation.getState('idle')?.isPlaying) {
+            //     this.animation.play('idle');
+            // }
         }
 
-        if(this.avatar.currSpaceID == KBEngineApp.app.spaceID){
+        if (this.avatar.currSpaceID == KBEngineApp.app.spaceID) {
             this.avatar.position = new Vector3(this.node.getPosition().x, this.node.getPosition().y, this.node.getPosition().z);
             this.avatar.direction = new Vector3(this.node.getRotation().x, this.node.getRotation().z, this.node.getRotation().y);
         }
-        
+
     }
 }

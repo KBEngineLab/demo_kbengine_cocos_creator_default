@@ -9,6 +9,7 @@ enum AnimState {
     Idle = 'idle',
     Run = 'run',
     Attack = 'attack',
+    Die = 'die',  // 新增死亡动画状态
 }
 
 @ccclass('GameObject')
@@ -32,6 +33,8 @@ export class GameObject extends Component {
     private _currentState: AnimState = AnimState.Idle;
     private _attackTimer: number = 0;
 
+    private _hasDied: boolean = false;
+
     protected onDestroy(): void {
         this.nameLabel = null;
         this.hpBar = null;
@@ -48,8 +51,8 @@ export class GameObject extends Component {
         if (!canvas || !camera) return;
 
         // 初始化动画组件
-        this._anim = this.getComponent(SkeletalAnimation) ? this.getComponent(SkeletalAnimation)  : this.getComponentInChildren(SkeletalAnimation);
-        
+        this._anim = this.getComponent(SkeletalAnimation) ? this.getComponent(SkeletalAnimation) : this.getComponentInChildren(SkeletalAnimation);
+
 
         resources.load("prefab/ui/血条", Prefab, (err, prefab) => {
             if (err) {
@@ -73,7 +76,7 @@ export class GameObject extends Component {
             this.nameLabel = this.headInfoUI.getChildByName("name")?.getComponent(Label);
             this.hpBar = this.headInfoUI.getChildByName("hp")?.getComponent(ProgressBar);
 
-            if(!this.showHPBar){
+            if (!this.showHPBar) {
                 this.hpBar.node.active = false;
             }
 
@@ -81,7 +84,7 @@ export class GameObject extends Component {
             this.hpBar.totalLength = this.hpMax;
             this.hpBar.progress = this.hp / this.hpMax;
 
-            if(this.entity) this.lastEntityPos = v3(this.entity.position.x, this.entity.position.y, this.entity.position.z);
+            if (this.entity) this.lastEntityPos = v3(this.entity.position.x, this.entity.position.y, this.entity.position.z);
         });
     }
 
@@ -106,13 +109,31 @@ export class GameObject extends Component {
         this._currentState = state;
 
         // if(state.)
-        if ( !this._anim.getState(state)?.isPlaying){
+        if (!this._anim.getState(state)?.isPlaying) {
             this._anim.play(state);
         }
     }
 
     protected update(dt: number): void {
         if (!this.entity || !this._anim) return;
+
+        // 死亡判断（仅限 Avatar 和 Monster 类型）
+        const entityType = this.entity.className;
+        if ((entityType === 'Avatar' || entityType === 'Monster') && this.entity.state === 1 && !this._hasDied && !this.entity.IsPlayer()) {
+            this._hasDied = true;
+            this._switchAnim(AnimState.Die);
+            return;
+        }
+
+        if(this.entity.state != 1){
+            this._hasDied = false;
+        }
+
+
+    
+
+        // 如果已死亡，不再处理其他动画
+        if (this._hasDied) return;
 
         // 攻击动画优先级最高
         if (this._attackTimer > 0) {
@@ -132,6 +153,6 @@ export class GameObject extends Component {
         } else {
             this._switchAnim(AnimState.Idle);
         }
-
     }
+
 }
