@@ -105,7 +105,6 @@ export class PlayerController extends Component {
                     this.playAttack()
 
                     // 你可以添加其它逻辑，如发送攻击事件、扣血等
-                    console.log(hitNode.name.substring(hitNode.name.indexOf("_")));
                     this.avatar.cellEntityCall.useTargetSkill(1,Number(hitNode.name.substring(hitNode.name.indexOf("_")+ 1)))
                 } else {
                     
