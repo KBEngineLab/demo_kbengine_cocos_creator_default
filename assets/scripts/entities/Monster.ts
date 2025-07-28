@@ -7,12 +7,14 @@ import KBEDebug from "../kbe_typescript_plugins/KBEDebug";
 import { RegisterScript } from "../kbe_typescript_plugins/ExportEntity";
 import { MonsterBase } from "../kbe_typescript_plugins/MonsterBase";
 import { Vector3 } from "../kbe_typescript_plugins/KBEMath";
-import { director, instantiate, Prefab, resources, tween, Vec3 } from "cc";
+import { director, instantiate, Prefab, resources, tween, v3, Vec3 } from "cc";
 import { AvatarItem } from "../ui/login/AvatarItem";
 import { GameObject } from "../GameObject";
+import { KBEngineApp } from "../kbe_typescript_plugins/KBEngine";
 
 export class Monster extends MonsterBase {
 
+    private _go: GameObject = null!;
     __init__() {
         super.__init__();
         let that = this;
@@ -31,24 +33,21 @@ export class Monster extends MonsterBase {
 
     onPositionChanged(oldVal: Vector3): void {
         if (!this.renderObj) return;
-
-
-
-        // console.log("Monster::onDirectionChanged:", this.direction);
-        // console.log("Old direction:", oldVal);
-        // console.log("Monster::onPositionChanged:", this.position);
-        // console.log("Old position:", oldVal);
-
         const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
 
-        // 停止之前的移动 tween（如果有）
-        tween(this.renderObj).stop();
+        const oldtPos = v3(oldVal.x, 0.1, oldVal.z);
+        const dist = Vec3.distance(targetPos, oldtPos);
 
-        // 平滑移动（0.2 秒可调）
-        tween(this.renderObj)
-            .to(0.2, { position: targetPos }, { easing: 'sineInOut' })
-            .start();
-        // this.renderObj.setPosition(this.position.x, this.position.y, this.position.z);
+        if (dist > 20) {
+            this.renderObj.setPosition(targetPos);
+        } else {
+            tween(this.renderObj).stop();
+            tween(this.renderObj)
+                .to(0.2, { position: targetPos }, { easing: 'linear' })
+                .start();
+        }
+
+
     }
 
     onDirectionChanged(oldVal: Vector3): void {
@@ -89,7 +88,11 @@ export class Monster extends MonsterBase {
             go.hp = that.HP;
             go.hpMax = that.HP_Max;
 
+            go.entity = that;
+
             go.create();
+
+            this._go = go;
 
             monster.setPosition(this.position.x, 0, this.position.z);
             monster.setRotationFromEuler(this.direction.x, this.direction.z, this.direction.y);
@@ -105,6 +108,15 @@ export class Monster extends MonsterBase {
             this.renderObj.destroy();
             this.renderObj = null;
         }
+    }
+
+    OnLeaveSpace(): void {
+        // this.OnLeaveWorld();
+    }
+
+
+    OnEnterSpace(): void {
+        // this.OnEnterWorld();
     }
 
 

@@ -19,6 +19,7 @@ export class Account extends AccountBase {
         g_Account=this
         window["g_Account"]=this
 
+
         // g_HelloLayer.node.active=true
         // g_HelloLayer.onLoginSuccess()
         // // this.BaseCall("reqAvatarList")
@@ -26,8 +27,12 @@ export class Account extends AccountBase {
 
         // KBEEvent.Register("reqAvatarList",this,this.onReqAvatarList.bind(this))
         // KBEEvent.Register("selectAvatarGame",this,this.selectAvatarGame.bind(this))
+ 
+        KBEDebug.DEBUG_MSG("创建Account实体")
 
-        KBEDebug.DEBUG_MSG("Account:: 登录成功")
+
+
+
         MessagePopup.showMessage("登录成功")
         this.baseEntityCall.reqAvatarList()
         

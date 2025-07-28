@@ -13,9 +13,22 @@ import { AvatarBase } from "../kbe_typescript_plugins/AvatarBase";
 import { GameObject } from "../GameObject";
 import { g_CameraController } from "../CameraController";
 import { PlayerController } from "../PlayerController";
+import { KBEngineApp } from "../kbe_typescript_plugins/KBEngine";
 
 export var g_Avatar
 export class Avatar extends AvatarBase {
+
+
+    public currSpaceID: number = 0;
+    private _playerController: PlayerController | null = null;
+
+
+    constructor() {
+        super();
+
+
+    }
+
     public onAddSkill(arg1: number) {
         console.log("Avatar::onAddSkill: " + arg1);
     }
@@ -50,18 +63,27 @@ export class Avatar extends AvatarBase {
     }
 
     onPositionChanged(oldVal: Vector3): void {
+        super.onPositionChanged(oldVal);
         if (!this.renderObj) return;
-        if (this.IsPlayer()) return;
+        // if (this.IsPlayer()) return;
 
         const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
 
-        // 停止之前的移动 tween（如果有）
-        tween(this.renderObj).stop();
+        const oldtPos = v3(oldVal.x, 0.1, oldVal.z);
+        const dist = Vec3.distance(targetPos, oldtPos);
 
-        // 平滑移动（0.2 秒可调）
-        tween(this.renderObj)
-            .to(0.2, { position: targetPos }, { easing: 'linear' })
-            .start();
+
+        if (dist > 10) {
+            if (this._playerController.characterController) this._playerController.characterController.enabled = false;
+            this.renderObj.setPosition(targetPos);
+            if (this._playerController.characterController) this._playerController.characterController.enabled = true;
+        } else {
+            tween(this.renderObj).stop();
+            tween(this.renderObj)
+                .to(0.1, { position: targetPos }, { easing: 'linear' })
+                .start();
+        }
+
     }
 
     onDirectionChanged(oldVal: Vector3): void {
@@ -73,6 +95,9 @@ export class Avatar extends AvatarBase {
         if (this.renderObj) {
             this.renderObj.setRotationFromEuler(this.direction.x, this.direction.z, this.direction.y);
         }
+
+
+        this.currSpaceID = KBEngineApp.app.spaceID;
     }
 
     public onHPChanged(oldValue: number): void {
@@ -107,10 +132,8 @@ export class Avatar extends AvatarBase {
             go.hp = that.HP;
             go.hpMax = that.HP_Max;
             go.offset = v3(0, 6);
+            go.entity = that;
             go.create();
-
-            console.log(this.position)
-
 
             if (this.IsPlayer()) {
                 g_CameraController.target = player;
@@ -120,6 +143,8 @@ export class Avatar extends AvatarBase {
                 pc.characterController = player.getComponent(CharacterController)
                 pc.moveSpeed = this.moveSpeed
                 pc.avatar = that;
+
+                that._playerController = pc;
             }
 
             that.renderObj = player;
@@ -133,6 +158,12 @@ export class Avatar extends AvatarBase {
             this.renderObj.destroy();
             this.renderObj = null;
         }
+    }
+
+    OnEnterSpace(): void {
+        super.OnEnterSpace();
+        this.currSpaceID = KBEngineApp.app.spaceID;
+
     }
 
 }

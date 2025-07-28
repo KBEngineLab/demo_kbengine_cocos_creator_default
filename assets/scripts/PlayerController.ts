@@ -6,6 +6,7 @@ import {
 import { g_CameraController } from './CameraController';
 import { Avatar } from './entities/Avatar';
 import { Vector3 } from './kbe_typescript_plugins/KBEMath';
+import { KBEngineApp } from './kbe_typescript_plugins/KBEngine';
 const { ccclass, property } = _decorator;
 
 @ccclass('PlayerController')
@@ -125,7 +126,7 @@ export class PlayerController extends Component {
         }
 
         // 通过 CharacterController 移动
-        if (this.characterController) {
+        if (this.characterController && this.characterController.enabled) {
             this.characterController.move(this._worldMove);
         }
 
@@ -138,11 +139,6 @@ export class PlayerController extends Component {
 
         // 动画播放控制
         if (this.animation) {
-            // if (isMoving && !this.animation.getState('SkeletonArmature|Skeleton_Running')?.isPlaying) {
-            //     this.animation.play('SkeletonArmature|Skeleton_Running');
-            // } else if (!isMoving && !this.animation.getState('SkeletonArmature|Skeleton_Idle')?.isPlaying) {
-            //     this.animation.play('SkeletonArmature|Skeleton_Idle');
-            // }
 
 
             if (isMoving && !this.animation.getState('run')?.isPlaying) {
@@ -152,7 +148,10 @@ export class PlayerController extends Component {
             }
         }
 
-        this.avatar.position = new Vector3(this.node.getPosition().x, this.node.getPosition().y, this.node.getPosition().z);
-        this.avatar.direction = new Vector3(this.node.getRotation().x, this.node.getRotation().z, this.node.getRotation().y);
+        if(this.avatar.currSpaceID == KBEngineApp.app.spaceID){
+            this.avatar.position = new Vector3(this.node.getPosition().x, this.node.getPosition().y, this.node.getPosition().z);
+            this.avatar.direction = new Vector3(this.node.getRotation().x, this.node.getRotation().z, this.node.getRotation().y);
+        }
+        
     }
 }

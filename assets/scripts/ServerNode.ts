@@ -7,6 +7,9 @@ import {KBEngineApp,KBEngineArgs} from "./kbe_typescript_plugins/KBEngine";
 import KBEEvent from "./kbe_typescript_plugins/Event";
 
 import { _decorator, Component,log,director } from 'cc';
+import KBEDebug from "./kbe_typescript_plugins/KBEDebug";
+import { MessagePopup } from "./MessagePopup";
+import { g_Account } from "./entities/Account";
 
 const {ccclass, property, disallowMultiple,executionOrder} = _decorator
 
@@ -21,12 +24,16 @@ export class ServerNode extends Component {
         g_ServerNode=this
         this.installEvents()
         this.initServerApp()
+
+         director.addPersistRootNode(this.node);
     }
 
     installEvents(){
         //example
         KBEEvent.Register("onCreateAccountResult",this,this.onCreateAccountResult.bind(this))
         KBEEvent.Register("onDisconnected",this,this.onDisconnected.bind(this))
+        KBEEvent.Register("onKicked",this,this.onKicked.bind(this))
+        KBEEvent.Register("onLoginBaseappSuccessfully",this,this.onLoginSuccessfully.bind(this))
     }
 
     initServerApp():void {
@@ -42,6 +49,12 @@ export class ServerNode extends Component {
         log("onCreateAccountResult",err,datas)
     }
 
+
+    onLoginSuccessfully(){
+        // KBEDebug.DEBUG_MSG("Account:: 登录成功")
+        // MessagePopup.showMessage("登录成功")
+        // g_Account.baseEntityCall.reqAvatarList()
+    }
     onDisconnected(){
         KBEngineApp.Destroy()
         log("连接断开")
@@ -51,5 +64,14 @@ export class ServerNode extends Component {
     onDestroy(){
         g_ServerNode=null
         KBEEvent.DeregisterObject(this)
+    }
+
+    onKicked(failedcode){
+        MessagePopup.showMessage("连接断开:"+KBEngineApp.app.ServerErrItem(failedcode)?.descr)
+        KBEngineApp.Destroy()
+        log("连接断开")
+        director.loadScene("scene/login")
+        
+        this.initServerApp()
     }
 }

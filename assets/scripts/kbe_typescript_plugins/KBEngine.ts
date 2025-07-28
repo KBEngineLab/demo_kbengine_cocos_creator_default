@@ -142,6 +142,12 @@ export class KBEngineApp {
             clearInterval(KBEngineApp.app.idInterval);
         }
 
+        
+        if (KBEngineApp.app.updatePlayerToServerInterval) {
+            clearInterval(KBEngineApp.app.updatePlayerToServerInterval);
+        }
+
+
         KBEngineApp.app.UninstallEvents();
         KBEngineApp.app.Reset();
         KBEngineApp._app = undefined;
@@ -511,12 +517,7 @@ export class KBEngineApp {
         // 无需实现，已由插件生成静态代码
     }
 
-    Client_onUpdateData_xyz_optimized(stream: MemoryStream) {
-        let eid = this.GetViewEntityIDFromStream(stream);
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, 0, true);
-    }
+    
 
     private OnImportClientMessages(stream: MemoryStream): void {
         // 无需实现，已由插件生成静态代码
@@ -735,6 +736,9 @@ export class KBEngineApp {
 
         this.networkInterface.Close();
         this.Login_baseapp(true);
+
+
+        KBEEvent.Fire("onLoginSuccessfully");
     }
 
     private Login_baseapp(noconnect: boolean) {
@@ -961,8 +965,6 @@ export class KBEngineApp {
                 entity.onGetCell();
 
 
-                entity.onDirectionChanged(entity.direction);
-                entity.onPositionChanged(entity.position);
 
                 this.entityServerPos = entity.position;
 
@@ -970,6 +972,11 @@ export class KBEngineApp {
                 entity.inWorld = true;
                 entity.EnterWorld();
 
+
+                
+                entity.onDirectionChanged(entity.direction);
+                entity.onPositionChanged(entity.position);
+                
                 if (this.args.isOnInitCallPropertysSetMethods)
                     entity.CallPropertysSetMethods();
             }
@@ -1300,20 +1307,20 @@ export class KBEngineApp {
 
         if (roll != KBE_FLT_MAX) {
             changeDirection = true;
-            // entity.direction.x = (isOptimized? Int8ToAngle(roll, false)  : roll) * 360 / (2 * Math.PI);
             entity.direction.x = (isOptimized? Int8ToAngle(roll, false)  : roll);
+            // entity.direction.x = (isOptimized? Int8ToAngle(roll, false)  : roll) * 360 / (2 * Math.PI);
         }
 
         if (pitch != KBE_FLT_MAX) {
             changeDirection = true;
-            // entity.direction.y = (isOptimized? Int8ToAngle(pitch, false)  : pitch) * 360 / (2 * Math.PI);
             entity.direction.y = (isOptimized? Int8ToAngle(pitch, false)  : pitch);
+            // entity.direction.y = (isOptimized? Int8ToAngle(pitch, false)  : pitch) * 360 / (2 * Math.PI);
         }
 
         if (yaw != KBE_FLT_MAX) {
             changeDirection = true;
-            // entity.direction.z = (isOptimized? Int8ToAngle(yaw, false)  : yaw) * 360 / (2 * Math.PI);
             entity.direction.z = (isOptimized? Int8ToAngle(yaw, false)  : yaw);
+            // entity.direction.z = (isOptimized? Int8ToAngle(yaw, false)  : yaw) * 360 / (2 * Math.PI);
         }
 
         let done = false;
@@ -1371,13 +1378,32 @@ export class KBEngineApp {
 
         let entity = this.Player();
         if (entity != undefined && entity.isControlled) {
+
+            let oldPos = new Vector3(entity.position.x, entity.position.y, entity.position.z);
+
+            entity.position.x = x;
+            entity.position.y = y;
+            entity.position.z = z;
+            entity.onPositionChanged(oldPos);
             entity.OnUpdateVolatileData();
         }
     }
 
     Client_onUpdateBasePosXZ(x, z) {
         //KBEDebug.WARNING_MSG("Client_onUpdateBasePosXZ---------->>>:x(%s),z(%s)..entityServerPos:x(%s),y(%s),z(%s).", x,z,this.entityServerPos.x,this.entityServerPos.y,this.entityServerPos.z);
-        this.Client_onUpdateBasePos(x, this.entityServerPos.y, z);
+         this.entityServerPos.x = x;
+        this.entityServerPos.z = z;
+
+        let entity = this.Player();
+        if (entity != undefined && entity.isControlled) {
+
+            let oldPos = new Vector3(entity.position.x, entity.position.y, entity.position.z);
+
+            entity.position.x = x;
+            entity.position.z = z;
+            entity.onPositionChanged(oldPos);
+            entity.OnUpdateVolatileData();
+        }
     }
 
     Client_onUpdateData(stream: MemoryStream) {
@@ -1404,25 +1430,10 @@ export class KBEngineApp {
         entity.position.y = stream.ReadFloat();
         entity.position.z = stream.ReadFloat();
 
-        // let yaw = stream.ReadFloat() * 360 / (Math.PI * 2);
-        // let pitch = stream.ReadFloat() * 360 / (Math.PI * 2);
-        // let roll = stream.ReadFloat() * 360 / (Math.PI * 2);
+
         entity.direction.x = stream.ReadFloat();
         entity.direction.y = stream.ReadFloat();
         entity.direction.z = stream.ReadFloat();
-
-        // entity.direction.x = roll;
-        // entity.direction.y = pitch;
-        // entity.direction.z = yaw;
-
-        // 记录玩家最后一次上报位置时自身当前的位置
-        entity.entityLastLocalPos.x = entity.position.x;
-        entity.entityLastLocalPos.y = entity.position.y;
-        entity.entityLastLocalPos.z = entity.position.z;
-        
-        entity.entityLastLocalDir.x = entity.direction.x;
-        entity.entityLastLocalDir.y = entity.direction.y;
-        entity.entityLastLocalDir.z = entity.direction.z;
 
 
         entity.entityLastLocalDir = entity.direction;
@@ -1438,9 +1449,9 @@ export class KBEngineApp {
     Client_onUpdateData_ypr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let y = stream.ReadInt8();
-        let p = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let y = stream.ReadFloat();
+        let p = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, y, p, r, -1);
     }
@@ -1448,8 +1459,8 @@ export class KBEngineApp {
     Client_onUpdateData_yp(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let y = stream.ReadInt8();
-        let p = stream.ReadInt8();
+        let y = stream.ReadFloat();
+        let p = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, y, p, KBE_FLT_MAX, -1);
     }
@@ -1457,8 +1468,8 @@ export class KBEngineApp {
     Client_onUpdateData_yr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let y = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let y = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, y, KBE_FLT_MAX, r, -1);
     }
@@ -1466,8 +1477,8 @@ export class KBEngineApp {
     Client_onUpdateData_pr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let p = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let p = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, p, r, -1);
     }
@@ -1475,7 +1486,7 @@ export class KBEngineApp {
     Client_onUpdateData_y(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let y = stream.ReadInt8();
+        let y = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, y, KBE_FLT_MAX, KBE_FLT_MAX, -1);
     }
@@ -1483,7 +1494,7 @@ export class KBEngineApp {
     Client_onUpdateData_p(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let p = stream.ReadInt8();
+        let p = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, p, KBE_FLT_MAX, -1);
     }
@@ -1491,7 +1502,7 @@ export class KBEngineApp {
     Client_onUpdateData_r(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let r = stream.ReadInt8();
+        let r = stream.ReadFloat();
 
         this.UpdateVolatileData(eid, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, r, -1);
     }
@@ -1499,175 +1510,192 @@ export class KBEngineApp {
     Client_onUpdateData_xz(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, 1);
     }
 
     Client_onUpdateData_xz_ypr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let y = stream.ReadInt8();
-        let p = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let y = stream.ReadFloat();
+        let p = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], y, p, r, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, y, p, r, 1);
     }
 
     Client_onUpdateData_xz_yp(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let y = stream.ReadInt8();
-        let p = stream.ReadInt8();
+        let y = stream.ReadFloat();
+        let p = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], y, p, KBE_FLT_MAX, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, y, p, KBE_FLT_MAX, 1);
     }
 
     Client_onUpdateData_xz_yr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let y = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let y = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], y, KBE_FLT_MAX, r, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, y, KBE_FLT_MAX, r, 1);
     }
 
     Client_onUpdateData_xz_pr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let p = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let p = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], KBE_FLT_MAX, p, r, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, KBE_FLT_MAX, p, r, 1);
     }
 
     Client_onUpdateData_xz_y(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let y = stream.ReadInt8();
+        let y = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], y, KBE_FLT_MAX, KBE_FLT_MAX, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, y, KBE_FLT_MAX, KBE_FLT_MAX, 1);
     }
 
     Client_onUpdateData_xz_p(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        var xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        var p = stream.ReadInt8();
+        let p = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], KBE_FLT_MAX, p, KBE_FLT_MAX, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, KBE_FLT_MAX, p, KBE_FLT_MAX, 1);
     }
 
     Client_onUpdateData_xz_r(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        var xz = stream.ReadPackXZ();
+        let x = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        var r = stream.ReadInt8();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, r, 1);
+        this.UpdateVolatileData(eid, x, KBE_FLT_MAX, z, KBE_FLT_MAX, KBE_FLT_MAX, r, 1);
     }
 
     Client_onUpdateData_xyz(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        var xz = stream.ReadPackXZ();
-        var y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, 0);
+
+        this.UpdateVolatileData(eid, x, y, z, KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, 0);
     }
 
     Client_onUpdateData_xyz_ypr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let yaw = stream.ReadInt8();
-        let p = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let yaw = stream.ReadFloat();
+        let p = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], yaw, p, r, 0);
+        this.UpdateVolatileData(eid, x, y, z, yaw, p, r, 0);
     }
 
     Client_onUpdateData_xyz_yp(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let yaw = stream.ReadInt8();
-        let p = stream.ReadInt8();
+        let yaw = stream.ReadFloat();
+        let p = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], yaw, p, KBE_FLT_MAX, 0);
+        this.UpdateVolatileData(eid, x, y, z, yaw, p, KBE_FLT_MAX, 0);
     }
 
     Client_onUpdateData_xyz_yr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let yaw = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let yaw = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], yaw, KBE_FLT_MAX, r, 0);
+        this.UpdateVolatileData(eid, x, y, z, yaw, KBE_FLT_MAX, r, 0);
     }
 
     Client_onUpdateData_xyz_pr(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let p = stream.ReadInt8();
-        let r = stream.ReadInt8();
+        let p = stream.ReadFloat();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, p, r, 0);
+        this.UpdateVolatileData(eid, x, y, z, KBE_FLT_MAX, p, r, 0);
     }
 
     Client_onUpdateData_xyz_y(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let yaw = stream.ReadInt8();
+        let yaw = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], yaw, KBE_FLT_MAX, KBE_FLT_MAX, 0);
+        this.UpdateVolatileData(eid, x, y, z, yaw, KBE_FLT_MAX, KBE_FLT_MAX, 0);
     }
 
     Client_onUpdateData_xyz_p(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let p = stream.ReadInt8();
+        let p = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, p, KBE_FLT_MAX, 0);
+        this.UpdateVolatileData(eid, x, y, z, KBE_FLT_MAX, p, KBE_FLT_MAX, 0);
     }
 
     Client_onUpdateData_xyz_r(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
 
-        let xz = stream.ReadPackXZ();
-        let y = stream.ReadPackY();
+        let x = stream.ReadFloat();
+        let y = stream.ReadFloat();
+        let z = stream.ReadFloat();
 
-        let r = stream.ReadInt8();
+        let r = stream.ReadFloat();
 
-        this.UpdateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, r, 0);
+        this.UpdateVolatileData(eid, x, y, z, KBE_FLT_MAX, KBE_FLT_MAX, r, 0);
     }
 
 
@@ -1814,6 +1842,13 @@ export class KBEngineApp {
         this.UpdateVolatileData(eid, xz[0], KBE_FLT_MAX, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, r, 1, true);
     }
 
+    Client_onUpdateData_xyz_optimized(stream: MemoryStream) {
+        let eid = this.GetViewEntityIDFromStream(stream);
+        let xz = stream.ReadPackXZ();
+        let y = stream.ReadPackY();
+        this.UpdateVolatileData(eid, xz[0], y, xz[1], KBE_FLT_MAX, KBE_FLT_MAX, KBE_FLT_MAX, 0, true);
+    }
+ 
 
     Client_onUpdateData_xyz_ypr_optimized(stream: MemoryStream) {
         let eid = this.GetViewEntityIDFromStream(stream);
