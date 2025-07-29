@@ -75,6 +75,9 @@ export class PlayerController extends Component {
     }
 
     onTouchEnd(event: EventTouch) {
+        if(this.avatar.state == 1) return;
+
+        
         const screenPos = event.getLocation(); // 获取屏幕点击坐标
 
         // 从屏幕点转换到射线
@@ -101,8 +104,9 @@ export class PlayerController extends Component {
 
                 if (dist < 20) {
 
-
+                    this.node.lookAt(targetPos)
                     this.playAttack()
+
 
                     // 你可以添加其它逻辑，如发送攻击事件、扣血等
                     this.avatar.cellEntityCall.useTargetSkill(1,Number(hitNode.name.substring(hitNode.name.indexOf("_")+ 1)))
@@ -209,10 +213,8 @@ export class PlayerController extends Component {
         if (this._reliveBtn != null) {
             if (this.avatar.state == 1) {
                 this._reliveBtn.active = true; // 显示复活按钮
-                if (!this._playDieAnim && !this.animation.getState('die')?.isPlaying) {
-                    this._playDieAnim = true;
-                    this.animation.play('die');
-                }
+                
+                this._switchAnim(AnimState.Die)
             } else {
                 this._playDieAnim = false;
                 this._reliveBtn.active = false; // 隐藏复活按钮
@@ -220,8 +222,10 @@ export class PlayerController extends Component {
         }
 
 
+
         if (this.avatar.state == 1) return;
 
+        
 
         // if(this.camera == null){
         //     this.camera = this.cameraNode.getChildByName("FollowCamera")
@@ -259,6 +263,7 @@ export class PlayerController extends Component {
             Vec3.scaleAndAdd(this._worldMove, this._worldMove, right, this._moveDir.x);
             this._worldMove.normalize();
 
+
             // console.log(deltaTime);
             this._worldMove.multiplyScalar((this.moveSpeed / 10) * deltaTime);
         } else {
@@ -280,7 +285,7 @@ export class PlayerController extends Component {
 
         // 角色朝向移动方向转向
         if (isMoving) {
-            const flatMove = new Vec3(this._worldMove.x, 0, this._worldMove.z);
+            const flatMove = new Vec3(-this._worldMove.x, 0, -this._worldMove.z);
             Quat.fromViewUp(this._rotation, flatMove, Vec3.UP);
             this.node.setRotation(this._rotation);
         }

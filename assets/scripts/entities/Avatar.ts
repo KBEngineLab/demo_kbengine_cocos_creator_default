@@ -150,7 +150,7 @@ export class Avatar extends AvatarBase {
                 g_CameraController.target = player;
 
                 let pc = player.addComponent(PlayerController)
-                pc.animation = player.getComponent(SkeletalAnimation)
+                pc.animation = player.getComponentInChildren(SkeletalAnimation)
                 pc.characterController = player.getComponent(CharacterController)
                 pc.moveSpeed = this.moveSpeed
                 pc.avatar = that;

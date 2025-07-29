@@ -51,12 +51,11 @@ export class Monster extends MonsterBase {
     }
 
     onDirectionChanged(oldVal: Vector3): void {
-        // console.log("Monster::onDirectionChanged:", this.direction);
-        // console.log("Old direction:", oldVal);
         super.onDirectionChanged(oldVal);
 
         if (this.renderObj) {
-            this.renderObj.setRotationFromEuler(this.direction.x, this.direction.z, this.direction.y);
+            // +180 设置正确朝向，因为cocos 模型坐标系是-z朝外，lookat也是-z面向
+            this.renderObj.setRotationFromEuler(this.direction.x, this.direction.z + 180, this.direction.y);
         }
     }
 
