@@ -21,6 +21,11 @@
 - [x] 死亡/复活
 - [x] 攻击/攻击动画
 
+# sdk 生成
+
+start "" "%KBE_BIN_PATH%/kbcmd.exe" --clientsdk=typescript --outpath="%~dp0/kbengine_typescript_plugins"
+
+将kbengine_typescript_plugins 覆盖 assets/scripts/kbengine_typescript_plugins
 
 # 截图：
 
