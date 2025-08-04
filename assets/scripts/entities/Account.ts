@@ -1,7 +1,7 @@
 import { Entity, KBETypes } from "../kbe_typescript_plugins/KBEngine";
 import {RegisterScript} from "../kbe_typescript_plugins/ExportEntity";
 import {KBEngineApp} from "../kbe_typescript_plugins/KBEngine";
-import KBEEvent from "../kbe_typescript_plugins/Event";
+import KBEEvent,{EventOutTypes} from "../kbe_typescript_plugins/Event";
 import { AccountBase } from "../kbe_typescript_plugins/AccountBase";
 import KBEDebug from "../kbe_typescript_plugins/KBEDebug";
 import { MessagePopup } from "../MessagePopup";
@@ -18,6 +18,8 @@ export class Account extends AccountBase {
         super.__init__()
         g_Account=this
         window["g_Account"]=this
+
+
 
 
         // g_HelloLayer.node.active=true

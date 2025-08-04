@@ -34,20 +34,18 @@ export class Monster extends MonsterBase {
     onPositionChanged(oldVal: Vector3): void {
         if (!this.renderObj) return;
         const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
+        this.renderObj.setPosition(targetPos);
+    }
 
-        const oldtPos = v3(oldVal.x, 0.1, oldVal.z);
-        const dist = Vec3.distance(targetPos, oldtPos);
 
-        if (dist > 20) {
-            this.renderObj.setPosition(targetPos);
-        } else {
-            tween(this.renderObj).stop();
+    onSmoothPositionChanged(oldVal: Vector3): void {
+        if (!this.renderObj) return;
+        const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
+
+        tween(this.renderObj).stop();
             tween(this.renderObj)
                 .to(0.2, { position: targetPos }, { easing: 'linear' })
                 .start();
-        }
-
-
     }
 
     onDirectionChanged(oldVal: Vector3): void {

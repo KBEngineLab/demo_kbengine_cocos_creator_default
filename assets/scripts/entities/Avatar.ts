@@ -80,20 +80,24 @@ export class Avatar extends AvatarBase {
 
         const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
 
-        const oldtPos = v3(oldVal.x, 0.1, oldVal.z);
-        const dist = Vec3.distance(targetPos, oldtPos);
 
+        if (this._playerController.characterController) this._playerController.characterController.enabled = false;
+        this.renderObj.setPosition(targetPos);
+        if (this._playerController.characterController) this._playerController.characterController.enabled = true;
+        
 
-        if (dist > 10) {
-            if (this._playerController.characterController) this._playerController.characterController.enabled = false;
-            this.renderObj.setPosition(targetPos);
-            if (this._playerController.characterController) this._playerController.characterController.enabled = true;
-        } else {
-            tween(this.renderObj).stop();
+    }
+    
+    onSmoothPositionChanged(oldVal: Vector3): void {
+        super.onPositionChanged(oldVal);
+        if (!this.renderObj) return;
+        // if (this.IsPlayer()) return;
+        const targetPos = new Vec3(this.position.x, 0.1, this.position.z);
+
+        tween(this.renderObj).stop();
             tween(this.renderObj)
                 .to(0.1, { position: targetPos }, { easing: 'linear' })
                 .start();
-        }
 
     }
 
@@ -102,6 +106,7 @@ export class Avatar extends AvatarBase {
         // console.log("Monster::onDirectionChanged:", this.direction);
         // console.log("Old direction:", oldVal);
         super.onDirectionChanged(oldVal);
+
 
         if (this.renderObj) {
             this.renderObj.setRotationFromEuler(this.direction.x, this.direction.z, this.direction.y);

@@ -322,7 +322,7 @@ export class PlayerController extends Component {
 
         if (this.avatar.currSpaceID == KBEngineApp.app.spaceID) {
             this.avatar.position = new Vector3(this.node.getPosition().x, this.node.getPosition().y, this.node.getPosition().z);
-            this.avatar.direction = new Vector3(this.node.getRotation().x, this.node.getRotation().z, this.node.getRotation().y);
+            this.avatar.direction = new Vector3(this.node.eulerAngles.x, this.node.eulerAngles.z, this.node.eulerAngles.y);
         }
 
     }

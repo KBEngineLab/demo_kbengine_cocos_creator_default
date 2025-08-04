@@ -736,9 +736,6 @@ export class KBEngineApp {
 
         this.networkInterface.Close();
         this.Login_baseapp(true);
-
-
-        KBEEvent.Fire("onLoginSuccessfully");
     }
 
     private Login_baseapp(noconnect: boolean) {
@@ -1343,7 +1340,7 @@ export class KBEngineApp {
             let pos = isOptimized ? new Vector3(x + this.entityServerPos.x, y + this.entityServerPos.y, z + this.entityServerPos.z) : new Vector3(x, y, z);
             entity.position = pos;
             done = true;
-            entity.onPositionChanged(oldPos);
+            entity.onSmoothPositionChanged(oldPos);
             // KBEEvent.Fire("updatePosition", entity);
         }
 
@@ -1356,13 +1353,17 @@ export class KBEngineApp {
         // let pitch = stream.ReadFloat() * 360 / (Math.PI * 2);
         // let roll = stream.ReadFloat() * 360 / (Math.PI * 2);
 
+        let yaw = stream.ReadFloat();
+        let pitch = stream.ReadFloat();
+        let roll = stream.ReadFloat();
+
         let entity = this.Player();
         if (entity != null && entity.isControlled)
         {
             let oldDirection = new Vector3(entity.direction.x, entity.direction.y, entity.direction.z);
-            entity.direction.x = stream.ReadFloat();
-            entity.direction.y = stream.ReadFloat();
-            entity.direction.z = stream.ReadFloat();
+            entity.direction.x = yaw;
+            entity.direction.y = pitch;
+            entity.direction.z = roll;
             // KBEEvent.Fire("set_direction", entity);
             entity.onDirectionChanged(oldDirection);
             entity.OnUpdateVolatileData();
@@ -1384,7 +1385,7 @@ export class KBEngineApp {
             entity.position.x = x;
             entity.position.y = y;
             entity.position.z = z;
-            entity.onPositionChanged(oldPos);
+            entity.onSmoothPositionChanged(oldPos);
             entity.OnUpdateVolatileData();
         }
     }
@@ -1401,7 +1402,7 @@ export class KBEngineApp {
 
             entity.position.x = x;
             entity.position.z = z;
-            entity.onPositionChanged(oldPos);
+            entity.onSmoothPositionChanged(oldPos);
             entity.OnUpdateVolatileData();
         }
     }
@@ -3077,8 +3078,10 @@ export class Entity
         KBEEvent.Fire("onEnterSpace", this);
 
         // 要立即刷新表现层对象的位置
-        KBEEvent.Fire("set_position", this);
-        KBEEvent.Fire("set_direction", this);
+        // KBEEvent.Fire("set_position", this);
+        // KBEEvent.Fire("set_direction", this);
+        this.onPositionChanged(this.position);
+        this.onDirectionChanged(this.direction);
     }
 
     OnEnterSpace()
@@ -3212,6 +3215,17 @@ export class Entity
 
         if(this.inWorld){
             KBEEvent.Fire("set_position", this);
+        }
+    }
+    
+    // 平滑移动
+    onSmoothPositionChanged(oldVal: Vector3){
+        if(this.IsPlayer()){
+            KBEngineApp.app!.entityServerPos = this.position;
+        }
+
+        if(this.inWorld){
+            KBEEvent.Fire("updatePosition", this);
         }
     }
 
