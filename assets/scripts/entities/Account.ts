@@ -1,23 +1,23 @@
 import { Entity, KBETypes } from "../kbe_typescript_plugins/KBEngine";
-import {RegisterScript} from "../kbe_typescript_plugins/ExportEntity";
-import {KBEngineApp} from "../kbe_typescript_plugins/KBEngine";
-import KBEEvent,{EventOutTypes} from "../kbe_typescript_plugins/Event";
+import { RegisterScript } from "../kbe_typescript_plugins/ExportEntity";
+import { KBEngineApp } from "../kbe_typescript_plugins/KBEngine";
+import KBEEvent, { EventOutTypes } from "../kbe_typescript_plugins/Event";
 import { AccountBase } from "../kbe_typescript_plugins/AccountBase";
-import KBEDebug from "../kbe_typescript_plugins/KBEDebug";
+import KBELog from "../kbe_typescript_plugins/KBELog";
 import { MessagePopup } from "../MessagePopup";
 
 
-import {g_LoginLayer} from "../ui/login/LoginLayer";
+import { g_LoginLayer } from "../ui/login/LoginLayer";
 import { director } from "cc";
 
 
-export var g_Account:Account
+export var g_Account: Account
 export class Account extends AccountBase {
-    avatars:KBETypes.AVATAR_INFOS_LIST
+    avatars: KBETypes.AVATAR_INFOS_LIST
     __init__() {
         super.__init__()
-        g_Account=this
-        window["g_Account"]=this
+        g_Account = this
+        window["g_Account"] = this
 
 
 
@@ -29,15 +29,15 @@ export class Account extends AccountBase {
 
         // KBEEvent.Register("reqAvatarList",this,this.onReqAvatarList.bind(this))
         // KBEEvent.Register("selectAvatarGame",this,this.selectAvatarGame.bind(this))
- 
-        KBEDebug.DEBUG_MSG("创建Account实体")
+
+        KBELog.DEBUG_MSG("创建Account实体")
 
 
 
 
         MessagePopup.showMessage("登录成功")
         this.baseEntityCall.reqAvatarList()
-        
+
     }
 
 
@@ -55,20 +55,20 @@ export class Account extends AccountBase {
     onCreateAvatarResult(retcode, info) {
         if (retcode == 0) {
             this.baseEntityCall.reqAvatarList()
-        }else{
+        } else {
             console.info("KBEAccount::onCreateAvatarResult: avatarsize=" + this.avatars.values.length + ", error=" + KBEngineApp.app.ServerErr(retcode));
         }
 
-        
+
         g_LoginLayer.createAvatarResult(retcode, info)
     }
 
 
     onRemoveAvatar(dbid) {
-        if(dbid > 0){
+        if (dbid > 0) {
             MessagePopup.showMessage("删除角色成功")
             this.baseEntityCall.reqAvatarList()
-        }else{
+        } else {
             MessagePopup.showMessage("删除角色失败")
         }
         // if (this.avatars["values"].length <= 0)
@@ -97,15 +97,21 @@ export class Account extends AccountBase {
     selectAvatarGame(dbid) {
         // 这里偷懒先切换了场景后请求进入，实际上需要请求完之后，在avatar创建时再切换场景，同时切换场景时需要考虑各种entity的创建时机，
         // 因为场景创建和entity创建是"异步"的，可能entity创建时场景还没有加载完成。
+        KBEEvent.Pause();
         director.loadScene("scene/world", () => {
             console.info("Account::selectAvatarGame: scene loaded");
             this.baseEntityCall.selectAvatarGame(dbid);
             console.info("Account::selectAvatarGame: dbid=" + dbid);
+
+            
         });
+
+
+
     }
-    OnDestroy(){
+    OnDestroy() {
         super.OnDestroy()
-        g_Account=null
+        g_Account = null
     }
 
 }

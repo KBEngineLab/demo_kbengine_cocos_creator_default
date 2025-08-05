@@ -3,7 +3,7 @@
 //
 //    created by zone at 2018-10-19 19:00
 
-import KBEDebug from "../kbe_typescript_plugins/KBEDebug";
+import KBELog from "../kbe_typescript_plugins/KBELog";
 import { RegisterScript } from "../kbe_typescript_plugins/ExportEntity";
 import { Vector3 } from "../kbe_typescript_plugins/KBEMath";
 
@@ -14,6 +14,7 @@ import { GameObject } from "../GameObject";
 import { g_CameraController } from "../CameraController";
 import { PlayerController } from "../PlayerController";
 import { KBEngineApp } from "../kbe_typescript_plugins/KBEngine";
+import KBEEvent from "../kbe_typescript_plugins/Event";
 
 export var g_Avatar
 export class Avatar extends AvatarBase {
@@ -55,8 +56,12 @@ export class Avatar extends AvatarBase {
         console.log("Avatar::recvDamage: " + arg1 + ", " + arg2 + ", " + arg3 + ", " + arg4);
     }
     __init__() {
-        super.__init__()
+        super.__init__()   
+
+
+
         if (this.IsPlayer()) {
+                    
             g_Avatar = this
             window["g_Avatar"] = this
             // g_HelloLayer.node.active=false
@@ -124,6 +129,7 @@ export class Avatar extends AvatarBase {
     OnEnterWorld(): void {
         super.OnEnterWorld()
         let that = this;
+        console.log("Avatar::OnEnterWorld: spaceID=" + this.currSpaceID + ", entityID=" + this.id + ", name=" + this.name + ", pos=" + this.position.toString() + ", dir=" + this.direction.toString());
 
         resources.load("prefab/Player", Prefab, (err, prefab) => {
             if (err) {

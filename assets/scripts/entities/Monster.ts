@@ -3,7 +3,7 @@
 //
 //    created by zone at 2018-10-19 19:00
 
-import KBEDebug from "../kbe_typescript_plugins/KBEDebug";
+import KBELog from "../kbe_typescript_plugins/KBELog";
 import { RegisterScript } from "../kbe_typescript_plugins/ExportEntity";
 import { MonsterBase } from "../kbe_typescript_plugins/MonsterBase";
 import { Vector3 } from "../kbe_typescript_plugins/KBEMath";

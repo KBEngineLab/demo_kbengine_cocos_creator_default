@@ -1,5 +1,5 @@
 
-import KBEDebug from "./KBEDebug";
+import KBELog from "./KBELog";
 
 export function UTF8ArrayToString(array: Uint8Array): string
 {
@@ -37,7 +37,7 @@ export function UTF8ArrayToString(array: Uint8Array): string
                 i += 3;
                 break;
             default:
-                KBEDebug.ERROR_MSG("UTF8ArrayToString::execute flow shouldnt reach here.");
+                KBELog.ERROR_MSG("UTF8ArrayToString::execute flow shouldnt reach here.");
         }
     }
 

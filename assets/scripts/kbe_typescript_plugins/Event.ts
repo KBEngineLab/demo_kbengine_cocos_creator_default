@@ -1,5 +1,5 @@
 
-import KBEDebug from "./KBEDebug";
+import KBELog from "./KBELog";
 
 class EventInfo
 {
@@ -17,6 +17,25 @@ class EventInfo
 export default class KBEEvent
 {
     private static _events: {} = {};
+    private static _eventsOut: Array<{ eventName: string, params: any[] }> = [];
+    private static _isPause = false;
+
+    private static _processOutEventsStarted = false;
+
+    static Pause(): void
+    {
+        this._isPause = true;
+    }
+    static Resume(): void
+    {
+        this._isPause = false;
+        this.processOutEvents();
+    }
+
+    static isPaused(): boolean
+    {
+        return this._isPause;
+    }
 
     static Register(eventName: string, p_object: object, cbFunction: Function): void
     {
@@ -34,7 +53,7 @@ export default class KBEEvent
         let eventList: Array<EventInfo> = this._events[eventName];
         if(eventList === undefined)
         {
-            // KBEDebug.ERROR_MSG("Event::Deregister:cant find event by name(%s).", eventName);
+            // KBELog.ERROR_MSG("Event::Deregister:cant find event by name(%s).", eventName);
             return;
         }
 
@@ -42,51 +61,94 @@ export default class KBEEvent
         for (let item of eventList)
         {
             // 注意，严格模式下，arguments,call等被禁用，不可访问这些成员
-            //KBEDebug.WARNING_MSG("Event::Deregister:let key of eventList.:" +item.m_cbFunction.toString());
+            //KBELog.WARNING_MSG("Event::Deregister:let key of eventList.:" +item.m_cbFunction.toString());
 
             if(p_object === item.m_object && item.m_cbFunction === cbFunction)
             {
                 let index: number = eventList.indexOf(item);
                 eventList.splice(index, 1);
-                KBEDebug.WARNING_MSG("Event::Deregister:item.m_cbFunction === cbFunction...delete index:%d", index);
+                KBELog.WARNING_MSG("Event::Deregister:item.m_cbFunction === cbFunction...delete index:%d", index);
                 hasFound = true;
                 break;
             }
         }
         if(!hasFound)
         {
-            // KBEDebug.ERROR_MSG("Event::Deregister:cant find event by Function(event name:%s).", eventName);
+            // KBELog.ERROR_MSG("Event::Deregister:cant find event by Function(event name:%s).", eventName);
         }
     }
 
     static Fire(eventName: string, ...params: any[]): void
     {
-        let eventList: Array<EventInfo> = this._events[eventName];
-        if(eventList === undefined)
-        {
-            // KBEDebug.DEBUG_MSG("Event::Fire:cant find event by name(%s).", eventName);
-            return;
-        }
+        this._eventsOut.push({ eventName, params });
 
-        for(let item of eventList)
-        {
-            try
-            {
-                // 注意，传入参数和注册函数参数类型数量可以不一致，作为事件函数的参数类型检查没有作用
-                item.m_cbFunction.apply(item.m_object, params);
-            }
-            catch(e)
-            {
-                KBEDebug.ERROR_MSG("Event::Fire(%s):%s", eventName, e);
+
+        // let eventList: Array<EventInfo> = this._events[eventName];
+        // if(eventList === undefined)
+        // {
+        //     // KBELog.DEBUG_MSG("Event::Fire:cant find event by name(%s).", eventName);
+        //     return;
+        // }
+
+        // for(let item of eventList)
+        // {
+        //     try
+        //     {
+        //         // 注意，传入参数和注册函数参数类型数量可以不一致，作为事件函数的参数类型检查没有作用
+        //         item.m_cbFunction.apply(item.m_object, params);
+        //     }
+        //     catch(e)
+        //     {
+        //         KBELog.ERROR_MSG("Event::Fire(%s):%s", eventName, e);
+        //     }
+        // }
+    }
+
+    static processOutEvents(){
+        if(this._processOutEventsStarted) return;
+
+        // console.log("KBEEvent::processOutEvents: _eventsOut.length=" + this._eventsOut.length + ", isPause=" + this._isPause);
+        this._processOutEventsStarted = true;
+        while(this._eventsOut.length > 0 && !this._isPause){
+            let eventObj = this._eventsOut.shift();
+            if(eventObj){
+                // this.Fire(eventObj.eventName, ...eventObj.params);
+                let eventName = eventObj.eventName;
+                let params = eventObj.params;
+                let eventList: Array<EventInfo> = this._events[eventName];
+                if(eventList === undefined)
+                {
+                    // KBELog.DEBUG_MSG("Event::Fire:cant find event by name(%s).", eventName);
+                    continue;
+                }
+
+                for(let item of eventList)
+                {
+                    try
+                    {
+                        // 注意，传入参数和注册函数参数类型数量可以不一致，作为事件函数的参数类型检查没有作用
+                        item.m_cbFunction.apply(item.m_object, params);
+                    }
+                    catch(e)
+                    {
+                        KBELog.ERROR_MSG("Event::Fire(%s):%s", eventName, e);
+                    }
+                }
             }
         }
+        this._processOutEventsStarted = false;
+    }
+
+    static clearFiredEvents(){
+        this._eventsOut = [];   
+        this._isPause = false;
     }
 
     static DeregisterObject(p_object: object): void
     {
         if(p_object === null)
         {
-            KBEDebug.ERROR_MSG("Event::DeregisterObject:object cannot be null.");
+            KBELog.ERROR_MSG("Event::DeregisterObject:object cannot be null.");
             return;
         }
 
@@ -105,7 +167,7 @@ export default class KBEEvent
             }
         }
 
-        KBEDebug.DEBUG_MSG("KBEEvent::DeregisterObject %s:delete count:%d.", p_object.toString(), deleteCount);
+        KBELog.DEBUG_MSG("KBEEvent::DeregisterObject %s:delete count:%d.", p_object.toString(), deleteCount);
     }
 }
 

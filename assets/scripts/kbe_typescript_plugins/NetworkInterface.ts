@@ -1,5 +1,5 @@
 
-import KBEDebug from "./KBEDebug";
+import KBELog from "./KBELog";
 import KBEEvent from "./Event";
 import { MemoryStream } from "./KBEngine";
 import Messages, { Message } from "./Messages";
@@ -18,11 +18,11 @@ export default class NetworkInterface
     {
         try
         {
-            this.socket = new WebSocket(addr);
+            this.socket = new WebSocket(addr); 
         }
         catch(e)
         {
-            KBEDebug.ERROR_MSG("NetworkInterface::Connect:Init socket error:" + e);
+            KBELog.ERROR_MSG("NetworkInterface::Connect:Init socket error:" + e);
             KBEEvent.Fire("onConnectionState", false);
             return;
         }
@@ -43,7 +43,7 @@ export default class NetworkInterface
     {
         try
         {
-            KBEDebug.DEBUG_MSG("NetworkInterface::Close on good:" + this.IsGood)
+            KBELog.DEBUG_MSG("NetworkInterface::Close on good:" + this.IsGood)
             if(this.socket != undefined)
             {
                 this.socket.close();
@@ -53,7 +53,7 @@ export default class NetworkInterface
         }
         catch(e)
         {
-            KBEDebug.ERROR_MSG("NetworkInterface::Close error:%s.", e);
+            KBELog.ERROR_MSG("NetworkInterface::Close error:%s.", e);
         }
     }
 
@@ -61,24 +61,24 @@ export default class NetworkInterface
     {
         if(!this.IsGood)
         {
-            KBEDebug.ERROR_MSG("NetworkInterface::Send:socket is unavailable.");
+            KBELog.ERROR_MSG("NetworkInterface::Send:socket is unavailable.");
             return;
         }
 
         try
         {
-            KBEDebug.DEBUG_MSG("NetworkInterface::Send buffer length:[%d].", buffer.byteLength);
+            KBELog.DEBUG_MSG("NetworkInterface::Send buffer length:[%d].", buffer.byteLength);
             this.socket!.send(buffer);
         }
         catch(e)
         {
-            KBEDebug.ERROR_MSG("NetworkInterface::Send error:%s.", e);
+            KBELog.ERROR_MSG("NetworkInterface::Send error:%s.", e);
         }
     }
 
     private onopen = (event: Event) =>
     {
-        KBEDebug.DEBUG_MSG("NetworkInterface::onopen:success!");
+        KBELog.DEBUG_MSG("NetworkInterface::onopen:success!");
         if(this.onOpenCB)
         {
             this.onOpenCB(event as MessageEvent);
@@ -88,26 +88,26 @@ export default class NetworkInterface
     
     private onerror = (event: Event) =>
     {
-        KBEDebug.DEBUG_MSG("NetworkInterface::onerror:...!");
+        KBELog.DEBUG_MSG("NetworkInterface::onerror:...!");
         KBEEvent.Fire("onNetworkError", event as MessageEvent);
     }
 
     private onmessage = (event: MessageEvent) =>
     {
         let data: ArrayBuffer = event.data;
-        //KBEDebug.DEBUG_MSG("NetworkInterface::onmessage:...!" + data.byteLength);
+        //KBELog.DEBUG_MSG("NetworkInterface::onmessage:...!" + data.byteLength);
         let stream: MemoryStream = new MemoryStream(data);
         stream.wpos = data.byteLength;
 
         while(stream.rpos < stream.wpos)
         {
             let msgID = stream.ReadUint16();
-            //KBEDebug.DEBUG_MSG("NetworkInterface::onmessage:...!msgID:" + msgID);
+            //KBELog.DEBUG_MSG("NetworkInterface::onmessage:...!msgID:" + msgID);
 
             let handler: Message = Messages.clientMessages[msgID];
             if(!handler)
             {
-                KBEDebug.ERROR_MSG("NetworkInterface::onmessage:message(%d) has not found.", msgID);
+                KBELog.ERROR_MSG("NetworkInterface::onmessage:message(%d) has not found.", msgID);
             }
             else
             {
@@ -133,7 +133,7 @@ export default class NetworkInterface
 
     private onclose = () =>
     {
-        KBEDebug.DEBUG_MSG("NetworkInterface::onclose:...!");
+        KBELog.DEBUG_MSG("NetworkInterface::onclose:...!");
         KBEEvent.Fire("onDisconnected");
     }
 }

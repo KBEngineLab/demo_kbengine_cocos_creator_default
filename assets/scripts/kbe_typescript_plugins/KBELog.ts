@@ -1,5 +1,5 @@
 
-export default class KBEDebug
+export default class KBELog
 {
 
     static DEBUG_MSG(msg: string, ...optionalParams: any[]): void
